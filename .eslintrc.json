@@ -14,7 +14,10 @@
         "no-console": "off",
         "no-unused-vars": "off",
         "global-require": "off",
-        "import/no-dynamic-require": "off"
+        "import/no-dynamic-require": "off",
+        "no-underscore-dangle": "off",
+        "consistent-return": "off",
+        "no-use-before-define": "off"
     },
     "settings": {
         "import/resolver": {
