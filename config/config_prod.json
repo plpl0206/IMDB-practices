@@ -1,0 +1,9 @@
+{
+    "mysql": {
+        "username": "molteo",
+        "password": "molteo",
+        "database": "IMDB",
+        "host": "35.189.174.90",
+        "dialect": "mariadb"
+    }
+}
