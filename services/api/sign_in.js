@@ -3,15 +3,13 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const models = require('../../models');
 const config = require('../../config');
-const redis = require('../../connections/redis');
+const { redis } = require('../../connections/redis');
 
 passport.use(new LocalStrategy({
   usernameField: 'email',
 }, signInVerify));
 
 async function signInVerify(email, password, done) {
-  console.log(email);
-  console.log(password);
   try {
     const user = await models.User.authenticate(email, password);
     done(null, user);
@@ -42,7 +40,7 @@ const genAuthorizaion = async (req, res, next) => {
   const secret = config.auth.parameter.jwt_secret;
   const jwtToken = jwt.sign(payload, secret);
 
-  await redis.setupRedis(`token:${userId}`, jwtToken, expire);
+  await redis.master.set(`token:${userId}`, jwtToken, 'EX', expire);
   res.response = {
     data: {
       user_id: userId,
@@ -52,6 +50,13 @@ const genAuthorizaion = async (req, res, next) => {
   return next();
 };
 
+const removeAuthorizaion = async (req, res, next) => {
+  const { userId } = req.user;
+  await redis.master.del(`token:${userId}`);
+  return next();
+};
+
 module.exports = {
   genAuthorizaion,
+  removeAuthorizaion,
 };

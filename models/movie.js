@@ -46,7 +46,7 @@ module.exports = (sequelize) => {
       sequelize,
       freezeTableName: true,
       underscored: true,
-      timestamps: true,
+      timestamps: false,
       modelName: 'movie',
       charset: 'utf8mb4',
       comment: 'IMDB movies',

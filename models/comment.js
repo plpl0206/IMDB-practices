@@ -48,7 +48,7 @@ module.exports = (sequelize) => {
       sequelize,
       freezeTableName: true,
       underscored: true,
-      timestamps: true,
+      timestamps: false,
       modelName: 'comment',
       charset: 'utf8mb4',
       indexes: [

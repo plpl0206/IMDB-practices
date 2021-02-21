@@ -12,9 +12,10 @@ const connect = async (config) => new Promise((resolve, reject) => {
   client.on('error', (error) => resolve(error));
 });
 
-let redis;
+const redis = {};
 const setupRedis = async (config) => {
-  redis = await connect(config);
+  const client = await connect(config);
+  redis.master = client;
 };
 
 module.exports = { redis, setupRedis };

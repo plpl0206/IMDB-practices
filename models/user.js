@@ -37,6 +37,19 @@ class User extends Model {
     }
     return user;
   }
+
+  static async getUserById(userId) {
+    const user = await this.findOne({ where: { userId } });
+    return user;
+  }
+
+  static async getNoPwdUserById(userId) {
+    const user = await this.findOne({
+      where: { userId },
+      attributes: { exclude: ['password'] },
+    });
+    return user;
+  }
 }
 
 module.exports = (sequelize) => {
@@ -79,7 +92,7 @@ module.exports = (sequelize) => {
       sequelize,
       freezeTableName: true,
       underscored: true,
-      timestamps: true,
+      timestamps: false,
       modelName: 'user',
       charset: 'utf8mb4',
       comment: 'IMDB comment user',
