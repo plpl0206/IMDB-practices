@@ -18,7 +18,7 @@ const createUser = async (req, res, next) => {
 
   const emailExisted = await models.User.emailExisted(email);
   if (emailExisted) {
-    res.json({
+    res.status(400).json({
       msg: 'email already registed',
     });
     return;
@@ -26,8 +26,8 @@ const createUser = async (req, res, next) => {
   const user = await models.User.createUserByEmail(email, username, password);
 
   if (user.isError) {
-    res.json({
-      msg: user.original ? user.original.code : 'fail to create user',
+    res.status(500).json({
+      msg: user.original ? user.original.code : 'CREATE USER FAIL',
     });
     return;
   }

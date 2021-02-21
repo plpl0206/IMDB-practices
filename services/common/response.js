@@ -3,11 +3,12 @@ const response = {
     res.response = res.response || {};
     const {
       type = 'application/json',
+      code,
       msg,
       data = {},
     } = res.response;
     res.set('Content-Type', type);
-    res.send({ msg, data });
+    res.send({ code, msg, data });
   },
 };
 

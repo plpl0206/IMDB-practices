@@ -24,6 +24,7 @@ const userServices = {
     } catch (err) {
       console.log(err.message);
       res.response = {
+        code: 500,
         msg: 'UPDATE USER FAIL',
       };
     }
@@ -41,6 +42,7 @@ const userServices = {
     } catch (err) {
       console.log(err.message);
       res.response = {
+        code: 500,
         msg: 'DELETE USER FAIL',
       };
     }
