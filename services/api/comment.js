@@ -5,6 +5,7 @@ const validator = require('express-joi-validation').createValidator({
 const { sequelizePool } = require('../../connections/mysql');
 const models = require('../../models');
 const auditLogHelper = require('../../helpers/common/auditLog');
+const responseHelper = require('../../helpers/common/response');
 
 const createCommentSchema = Joi.object({
   movieId: Joi.number().required(),
@@ -49,8 +50,8 @@ const commetServices = {
     } catch (err) {
       console.log(err.message);
       res.response = {
-        code: 500,
-        msg: 'CREATE COMMENT INFO FAIL',
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        msg: responseHelper.RESPONSE_MSG.CREATE_COMMENT_FAILURE,
       };
     }
     return next();
@@ -88,8 +89,8 @@ const commetServices = {
     } catch (err) {
       console.log(err.message);
       res.response = {
-        code: 500,
-        msg: 'UPDATE COMMENT FAIL',
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        msg: responseHelper.RESPONSE_MSG.UPDATE_COMMENT_FAILURE,
       };
     }
 
@@ -120,13 +121,13 @@ const commetServices = {
       };
 
       res.response = {
-        msg: 'DELETE COMMENT SUCCESS',
+        msg: responseHelper.RESPONSE_MSG.DELETE_COMMENT_SUCCESS,
       };
     } catch (err) {
       console.log(err.message);
       res.response = {
-        code: 500,
-        msg: 'DELETE COMMENT FAIL',
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        msg: responseHelper.RESPONSE_MSG.DELETE_COMMENT_FAILURE,
       };
     }
     return next();
@@ -155,8 +156,8 @@ const commetServices = {
     } catch (err) {
       console.log(err.message);
       res.response = {
-        code: 500,
-        msg: 'GET COMMENT LIST FAIL',
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        msg: responseHelper.RESPONSE_MSG.GET_COMMENT_LIST_FAILURE,
       };
     }
     return next();

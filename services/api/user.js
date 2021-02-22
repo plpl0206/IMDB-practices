@@ -3,6 +3,7 @@ const validator = require('express-joi-validation').createValidator({
   passError: true,
 });
 const models = require('../../models');
+const responseHelper = require('../../helpers/common/response');
 
 const createUserSchema = Joi.object({
   username: Joi.string().required(),
@@ -19,16 +20,16 @@ const userServices = {
 
     const emailExisted = await models.User.emailExisted(email);
     if (emailExisted) {
-      res.status(400).json({
-        msg: 'email already registed',
+      res.status(responseHelper.RESPONSE_CODE.BAD_REQUEST).json({
+        msg: responseHelper.RESPONSE_MSG.SIGN_UP_EMAIL_EXISTED,
       });
       return;
     }
     const user = await models.User.createUserByEmail(email, username, password);
 
     if (user.isError) {
-      res.status(500).json({
-        msg: user.original ? user.original.code : 'CREATE USER FAIL',
+      res.status(responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR).json({
+        msg: user.original ? user.original.code : responseHelper.RESPONSE_MSG.CREATE_USER_FAILURE,
       });
       return;
     }
@@ -59,8 +60,8 @@ const userServices = {
     } catch (err) {
       console.log(err.message);
       res.response = {
-        code: 500,
-        msg: 'UPDATE USER FAIL',
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        msg: responseHelper.RESPONSE_MSG.UPDATE_USER_FAILURE,
       };
     }
 
@@ -72,13 +73,13 @@ const userServices = {
     try {
       const user = await models.User.destroy({ where: { userId } });
       res.response = {
-        msg: 'DELETE USER SUCCESS',
+        msg: responseHelper.RESPONSE_MSG.DELETE_USER_SUCCESS,
       };
     } catch (err) {
       console.log(err.message);
       res.response = {
-        code: 500,
-        msg: 'DELETE USER FAIL',
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        msg: responseHelper.RESPONSE_MSG.DELETE_USER_FAILURE,
       };
     }
 

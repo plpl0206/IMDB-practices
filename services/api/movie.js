@@ -5,6 +5,7 @@ const validator = require('express-joi-validation').createValidator({
 const { sequelizePool } = require('../../connections/mysql');
 const models = require('../../models');
 const auditLogHelper = require('../../helpers/common/auditLog');
+const responseHelper = require('../../helpers/common/response');
 
 const createMovieSchema = Joi.object({
   name: Joi.string().required(),
@@ -41,8 +42,8 @@ const movieServices = {
     } catch (err) {
       console.log(err.message);
       res.response = {
-        code: 500,
-        msg: 'CREATE MOVIE INFO FAIL',
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        msg: responseHelper.RESPONSE_MSG.CREATE_MOVIE_FAILURE,
       };
     }
     return next();
@@ -69,8 +70,8 @@ const movieServices = {
     } catch (err) {
       console.log(err.message);
       res.response = {
-        code: 500,
-        msg: 'GET MOVIE LIST FAIL',
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        msg: responseHelper.RESPONSE_MSG.GET_MOVIE_LIST_FAILURE,
       };
     }
 
@@ -88,8 +89,8 @@ const movieServices = {
     } catch (err) {
       console.log(err.message);
       res.response = {
-        code: 500,
-        msg: 'GET MOVIE INFO FAIL',
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        msg: responseHelper.RESPONSE_MSG.GET_MOVIE_FAILURE,
       };
     }
     return next();
@@ -109,8 +110,8 @@ const movieServices = {
     } catch (err) {
       console.log(err.message);
       res.response = {
-        code: 500,
-        msg: 'UPDATE MOVIE FAIL',
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        msg: responseHelper.RESPONSE_MSG.UODATE_MOVIE_FAILURE,
       };
     }
 
@@ -123,7 +124,7 @@ const movieServices = {
       await models.Movie.destroy({ where: { id: movieId } });
 
       res.response = {
-        msg: 'DELETE MOVIE SUCCESS',
+        msg: responseHelper.RESPONSE_MSG.DELETE_MOVIE_SUCCESS,
         data: {
           movieId,
         },
@@ -131,8 +132,8 @@ const movieServices = {
     } catch (err) {
       console.log(err.message);
       res.response = {
-        code: 500,
-        msg: 'DELETE MOVIE INFO FAIL',
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        msg: responseHelper.RESPONSE_MSG.DELETE_MOVIE_FAILURE,
       };
     }
     return next();

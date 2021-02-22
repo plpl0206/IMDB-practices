@@ -4,6 +4,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const models = require('../../models');
 const config = require('../../config');
 const { redis } = require('../../connections/redis');
+const responseHelper = require('../../helpers/common/response');
 
 passport.use(new LocalStrategy({
   usernameField: 'email',
@@ -16,16 +17,16 @@ async function signInVerify(email, password, done) {
   } catch (err) {
     if (err.message === 'user not exist') {
       done(null, false, {
-        message: 'USER_NOT_EXIST',
-        code: 404,
+        code: responseHelper.RESPONSE_CODE.BAD_REQUEST,
+        message: responseHelper.RESPONSE_MSG.SIGN_IN_USER_NOT_EXIST,
       });
       return;
     }
 
     if (err.message === 'password error') {
       done(null, false, {
-        message: 'PASSWORD_ERROR',
-        code: 401,
+        code: responseHelper.RESPONSE_CODE.UNAUTHORIZED,
+        message: responseHelper.RESPONSE_MSG.SIGN_IN_PASSWORD_ERROR,
       });
       return;
     }
