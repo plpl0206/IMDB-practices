@@ -41,10 +41,39 @@ const movieServices = {
     return next();
   },
 
+  getMovieList: async (req, res, next) => {
+    const {
+      offset,
+      limit,
+    } = req.params;
+
+    try {
+      const movie = await models.Movie.findAndCountAll({
+        offset: offset ? parseInt(offset, 10) : 0,
+        limit: limit ? parseInt(limit, 10) : 0,
+        order: [['releaseDate', 'DESC']],
+      });
+      res.response = {
+        data: {
+          count: movie.count,
+          movies: movie.rows,
+        },
+      };
+    } catch (err) {
+      console.log(err.message);
+      res.response = {
+        code: 500,
+        msg: 'GET MOVIE LIST FAIL',
+      };
+    }
+
+    return next();
+  },
+
   getMovieInfoById: async (req, res, next) => {
     const { movieId } = req.params;
     try {
-      const movie = await models.Movie.getMovieById(movieId);
+      const movie = await models.Movie.findByPk(movieId);
 
       res.response = {
         data: movie,
@@ -66,7 +95,7 @@ const movieServices = {
         where: { id: movieId },
       });
 
-      const movie = await models.Movie.getMovieById(movieId);
+      const movie = await models.Movie.findByPk(movieId);
       res.response = {
         data: movie,
       };

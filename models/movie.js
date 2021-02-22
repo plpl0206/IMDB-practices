@@ -1,16 +1,7 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
 const moment = require('moment');
 
-class Movie extends Model {
-  static async getMovieById(movieId) {
-    const result = await this.findByPk(movieId);
-
-    const movie = {};
-    Object.assign(movie, result.dataValues);
-    movie.formattedReleaseDate = moment(result.releaseDate).format('YYYY-MM-DD');
-    return movie;
-  }
-}
+class Movie extends Model {}
 
 module.exports = (sequelize) => {
   Movie.init(
