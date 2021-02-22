@@ -1,9 +1,8 @@
-const sequelize = require('sequelize');
 const Joi = require('joi');
 const validator = require('express-joi-validation').createValidator({
   passError: true,
 });
-
+const { sequelizePool } = require('../../connections/mysql');
 const models = require('../../models');
 
 const createMovieSchema = Joi.object({
@@ -133,7 +132,6 @@ const movieServices = {
   },
 
   updateMovieRating: async (req, res, next) => {
-
     const {
       movieId,
       orignalRating,
@@ -142,7 +140,7 @@ const movieServices = {
       isUpdated = false,
     } = req.ratingData;
 
-    const transaction = await sequelize.transaction();
+    const transaction = await sequelizePool.transaction();
 
     try {
       const movie = await models.Movie.findByPk(movieId, { transaction });

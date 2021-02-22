@@ -13,9 +13,9 @@ const {
 const router = express.Router();
 
 router.get(
-    '/:movieId/offset/:offset/limit/:limit',
-    commetServices.getCommentListByMovieId,
-    handleResponse,
+  '/:movieId/offset/:offset/limit/:limit',
+  commetServices.getCommentListByMovieId,
+  handleResponse,
 );
 
 router.post(
@@ -35,7 +35,7 @@ router.put(
   commetServices.updateCommentById,
   movieServices.updateMovieRating,
   handleResponse,
-)
+);
 
 router.delete(
   '/:commentId',

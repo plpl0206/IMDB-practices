@@ -1,5 +1,4 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
-const moment = require('moment');
 
 class Movie extends Model {}
 

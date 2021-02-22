@@ -1,11 +1,10 @@
-const sequelize = require('sequelize');
 const Joi = require('joi');
 const validator = require('express-joi-validation').createValidator({
   passError: true,
 });
-
-const models = require('../../models');
 const { any } = require('joi');
+const { sequelizePool } = require('../../connections/mysql');
+const models = require('../../models');
 
 const createCommentSchema = Joi.object({
   movieId: Joi.number().required(),
@@ -53,49 +52,49 @@ const commetServices = {
 
   updateCommentById: async (req, res, next) => {
     const { commentId } = req.params;
-    
+
     try {
-        const orignalRating = req.updateData.rating;
+      const orignalRating = req.updateData.rating;
 
-        await models.Comment.update(req.updateData, {
-          where: { id: commentId },
-        });
-  
-        const comment = await models.Comment.findByPk(commentId);
+      await models.Comment.update(req.updateData, {
+        where: { id: commentId },
+      });
 
-        if (orignalRating){
-            const {
-                movieId,
-                rating,
-            } = comment;
-    
-            req.ratingData = {
-                movieId,
-                orignalRating,
-                rating,
-                isUpdated: true,
-            };
-        }
+      const comment = await models.Comment.findByPk(commentId);
 
-        res.response = {
-          data: comment,
-        };
-      } catch (err) {
-        console.log(err.message);
-        res.response = {
-          code: 500,
-          msg: 'UPDATE COMMENT FAIL',
+      if (orignalRating) {
+        const {
+          movieId,
+          rating,
+        } = comment;
+
+        req.ratingData = {
+          movieId,
+          orignalRating,
+          rating,
+          isUpdated: true,
         };
       }
 
-      return next();
+      res.response = {
+        data: comment,
+      };
+    } catch (err) {
+      console.log(err.message);
+      res.response = {
+        code: 500,
+        msg: 'UPDATE COMMENT FAIL',
+      };
+    }
+
+    return next();
   },
 
   removeCommentById: async (req, res, next) => {
     const { commentId } = req.params;
 
     try {
-      const transaction = await sequelize.transaction();
+      const transaction = await sequelizePool.transaction();
       const comment = await models.Comment.findByPk(commentId, { transaction });
 
       await models.Comment.destroy({
@@ -129,32 +128,32 @@ const commetServices = {
 
   getCommentListByMovieId: async (req, res, next) => {
     const {
-        movieId,
-        offset,
-        limit,
+      movieId,
+      offset,
+      limit,
     } = req.params;
 
     try {
-        const comment = await models.Comment.findAndCountAll({
-          where: { movieId },
-          offset: offset ? parseInt(offset, 10) : 0,
-          limit: limit ? parseInt(limit, 10) : 0,
-          order: [['releaseDate', 'DESC']],
-        });
-        res.response = {
-          data: {
-            count: comment.count,
-            comments: comment.rows,
-          },
-        };
-      } catch (err) {
-        console.log(err.message);
-        res.response = {
-          code: 500,
-          msg: 'GET COMMENT LIST FAIL',
-        };
-      }
-      return next();
+      const comment = await models.Comment.findAndCountAll({
+        where: { movieId },
+        offset: offset ? parseInt(offset, 10) : 0,
+        limit: limit ? parseInt(limit, 10) : 0,
+        order: [['releaseDate', 'DESC']],
+      });
+      res.response = {
+        data: {
+          count: comment.count,
+          comments: comment.rows,
+        },
+      };
+    } catch (err) {
+      console.log(err.message);
+      res.response = {
+        code: 500,
+        msg: 'GET COMMENT LIST FAIL',
+      };
+    }
+    return next();
   },
 
 };
