@@ -11,21 +11,21 @@ module.exports = (sequelize) => {
         autoIncrement: true,
         comment: 'Comment id',
       },
-      user_id: {
+      userId: {
         type: Sequelize.UUID,
         allowNull: false,
         defaultValue: '',
         comment: 'user id',
       },
-      movie_id: {
+      movieId: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         defaultValue: 0,
         comment: 'user id',
       },
-      comment: {
+      description: {
         type: DataTypes.TEXT,
-        comment: 'movie comment',
+        comment: 'movie comment description',
       },
       rating: {
         type: DataTypes.INTEGER,

@@ -44,6 +44,7 @@ router.delete(
   '/:movieId',
   ensureAuthenticated,
   deleteMovieSchemaValidator,
+  joiErrorHandle,
   movieServices.removeMovieInfoById,
   handleResponse,
 );

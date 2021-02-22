@@ -1,3 +1,4 @@
+const sequelize = require('sequelize');
 const Joi = require('joi');
 const validator = require('express-joi-validation').createValidator({
   passError: true,
@@ -127,6 +128,57 @@ const movieServices = {
         code: 500,
         msg: 'DELETE MOVIE INFO FAIL',
       };
+    }
+    return next();
+  },
+
+  updateMovieRating: async (req, res, next) => {
+
+    const {
+      movieId,
+      orignalRating,
+      rating,
+      isDeleted = false,
+      isUpdated = false,
+    } = req.ratingData;
+
+    const transaction = await sequelize.transaction();
+
+    try {
+      const movie = await models.Movie.findByPk(movieId, { transaction });
+      let {
+        avgRating,
+        ratingCount,
+      } = movie;
+
+      if (isUpdated) {
+        avgRating = ((avgRating * ratingCount) - orignalRating + rating) / ratingCount;
+      } else if (isDeleted) {
+        if (ratingCount - 1 === 0) {
+          ratingCount = 0;
+          avgRating = 0;
+        } else {
+          avgRating = ((avgRating * ratingCount) - rating) / (ratingCount - 1);
+          ratingCount -= 1;
+        }
+      } else {
+        avgRating = ((avgRating * ratingCount) + rating) / (ratingCount + 1);
+        ratingCount += 1;
+      }
+
+      await models.Movie.update(
+        {
+          avgRating,
+          ratingCount,
+        }, {
+          where: { id: movieId },
+          transaction,
+        },
+      );
+
+      await transaction.commmit();
+    } catch (err) {
+      console.log(err.message);
     }
     return next();
   },
