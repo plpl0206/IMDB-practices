@@ -30,11 +30,11 @@ async function signInVerify(email, password, done) {
       });
       return;
     }
-    done(null, false, { message: err.message, statuse: 400 });
+    done(null, false, { message: err.message, statuse: responseHelper.RESPONSE_CODE.BAD_REQUEST });
   }
 }
 
-const genAuthorizaion = async (req, res, next) => {
+const genAuthorization = async (req, res, next) => {
   const { userId } = req.user;
   const expire = config.auth.parameter.user_token_expire_sec;
   const payload = { user_id: userId };
@@ -51,13 +51,13 @@ const genAuthorizaion = async (req, res, next) => {
   return next();
 };
 
-const removeAuthorizaion = async (req, res, next) => {
+const removeAuthorization = async (req, res, next) => {
   const { userId } = req.user;
   await redis.master.del(`token:${userId}`);
   return next();
 };
 
 module.exports = {
-  genAuthorizaion,
-  removeAuthorizaion,
+  genAuthorization,
+  removeAuthorization,
 };

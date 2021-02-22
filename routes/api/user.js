@@ -4,7 +4,7 @@ const { ensureAuthenticated } = require('../../middlewares/user');
 const userMiddleware = require('../../middlewares/api/user');
 const { userServices } = require('../../services/api/user');
 const {
-  removeAuthorizaion,
+  removeAuthorization,
 } = require('../../services/api/sign_in');
 
 const router = express.Router();
@@ -28,7 +28,7 @@ router.delete(
   '',
   ensureAuthenticated,
   userServices.removeUserInfo,
-  removeAuthorizaion,
+  removeAuthorization,
   handleResponse,
 );
 

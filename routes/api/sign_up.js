@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  genAuthorizaion,
+  genAuthorization,
 } = require('../../services/api/sign_in');
 const {
   createUserSchemaValidator,
@@ -17,7 +17,7 @@ router.post(
   createUserSchemaValidator,
   joiErrorHandle,
   userServices.createUser,
-  genAuthorizaion,
+  genAuthorization,
   handleResponse,
 );
 

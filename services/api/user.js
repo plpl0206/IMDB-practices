@@ -28,7 +28,8 @@ const userServices = {
     const user = await models.User.createUserByEmail(email, username, password);
 
     if (user.isError) {
-      res.status(responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR).json({
+      res.json({
+        code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
         msg: user.original ? user.original.code : responseHelper.RESPONSE_MSG.CREATE_USER_FAILURE,
       });
       return;

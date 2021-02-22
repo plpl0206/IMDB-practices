@@ -10,11 +10,12 @@ const responseHelper = require('../../helpers/common/response');
 const createCommentSchema = Joi.object({
   movieId: Joi.number().required(),
   rating: Joi.number().required(),
+  description: Joi.string(),
 });
 
 const createCommentSchemaValidator = validator.body(createCommentSchema);
 
-const commetServices = {
+const commentServices = {
 
   createComment: async (req, res, next) => {
     const { userId } = req.user;
@@ -45,7 +46,7 @@ const commetServices = {
       await auditLogHelper.insertAuditLog({
         userId,
         movieId,
-        detail: `create a comment of a movie, detail = ${req.body}`,
+        detail: `create a comment of a movie, detail = ${JSON.stringify(req.body)}`,
       });
     } catch (err) {
       console.log(err.message);
@@ -59,28 +60,30 @@ const commetServices = {
 
   updateCommentById: async (req, res, next) => {
     const { commentId } = req.params;
+    const { rating } = req.updateData;
 
+    const transaction = await sequelizePool.mariadb.transaction();
     try {
-      const orignalRating = req.updateData.rating;
+      let comment = await models.Comment.findByPk(commentId);
+      const { movieId } = comment;
+      const orignalRating = comment.rating;
 
       await models.Comment.update(req.updateData, {
         where: { id: commentId },
       });
 
-      const comment = await models.Comment.findByPk(commentId);
+      comment = await models.Comment.findByPk(commentId);
 
-      if (orignalRating) {
-        const {
-          movieId,
-          rating,
-        } = comment;
+      await transaction.commit();
 
-        req.ratingData = {
+      req.ratingData = {};
+      if (rating) {
+        Object.assign(req.ratingData, {
           movieId,
           orignalRating,
           rating,
           isUpdated: true,
-        };
+        });
       }
 
       res.response = {
@@ -88,6 +91,7 @@ const commetServices = {
       };
     } catch (err) {
       console.log(err.message);
+      await transaction.rollback();
       res.response = {
         code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
         msg: responseHelper.RESPONSE_MSG.UPDATE_COMMENT_FAILURE,
@@ -100,14 +104,16 @@ const commetServices = {
   removeCommentById: async (req, res, next) => {
     const { commentId } = req.params;
 
+    const transaction = await sequelizePool.mariadb.transaction();
     try {
-      const transaction = await sequelizePool.transaction();
       const comment = await models.Comment.findByPk(commentId, { transaction });
 
       await models.Comment.destroy({
         where: { id: commentId },
         transaction,
       });
+
+      await transaction.commit();
 
       const {
         movieId,
@@ -125,6 +131,7 @@ const commetServices = {
       };
     } catch (err) {
       console.log(err.message);
+      await transaction.rollback();
       res.response = {
         code: responseHelper.RESPONSE_CODE.INTERNAL_SERVER_ERROR,
         msg: responseHelper.RESPONSE_MSG.DELETE_COMMENT_FAILURE,
@@ -141,16 +148,16 @@ const commetServices = {
     } = req.params;
 
     try {
-      const comment = await models.Comment.findAndCountAll({
+      const comments = await models.Comment.findAll({
         where: { movieId },
         offset: offset ? parseInt(offset, 10) : 0,
         limit: limit ? parseInt(limit, 10) : 0,
-        order: [['releaseDate', 'DESC']],
+        order: [['createdAt', 'DESC']],
       });
       res.response = {
         data: {
-          count: comment.count,
-          comments: comment.rows,
+          count: comments.length,
+          comments,
         },
       };
     } catch (err) {
@@ -167,5 +174,5 @@ const commetServices = {
 
 module.exports = {
   createCommentSchemaValidator,
-  commetServices,
+  commentServices,
 };

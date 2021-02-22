@@ -1,3 +1,5 @@
+const date = require('../../helpers/common/date');
+
 module.exports = {
   checkMovieUpdateData: async (req, res, next) => {
     const {
@@ -12,7 +14,7 @@ module.exports = {
     }
 
     if (releaseDate != null) {
-      Object.assign(updateData, { releaseDate });
+      Object.assign(updateData, { releaseDate: date.getTimestamp(releaseDate) });
     }
 
     Object.assign(req, { updateData });

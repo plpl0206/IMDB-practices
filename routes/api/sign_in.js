@@ -4,7 +4,7 @@ const { handleResponse } = require('../../services/common/response');
 const passportErrorHandle = require('../../middlewares/passport/common');
 
 const {
-  genAuthorizaion,
+  genAuthorization,
 } = require('../../services/api/sign_in');
 
 const router = express.Router();
@@ -16,7 +16,7 @@ router.post(
     failWithError: true,
   }),
   passportErrorHandle,
-  genAuthorizaion,
+  genAuthorization,
   handleResponse,
 );
 

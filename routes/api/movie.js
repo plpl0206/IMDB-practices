@@ -5,7 +5,6 @@ const joiErrorHandle = require('../../middlewares/joi_error_handle');
 const movieMiddleware = require('../../middlewares/api/movie');
 const {
   createMovieSchemaValidator,
-  deleteMovieSchemaValidator,
   movieServices,
 } = require('../../services/api/movie');
 
@@ -43,8 +42,6 @@ router.put(
 router.delete(
   '/:movieId',
   ensureAuthenticated,
-  deleteMovieSchemaValidator,
-  joiErrorHandle,
   movieServices.removeMovieInfoById,
   handleResponse,
 );

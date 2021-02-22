@@ -58,5 +58,6 @@ module.exports = (sequelize) => {
       comment: 'movies comment',
     },
   );
+
   return Comment;
 };

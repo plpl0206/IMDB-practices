@@ -7,14 +7,15 @@ const { movieServices } = require('../../services/api/movie');
 
 const {
   createCommentSchemaValidator,
-  commetServices,
+  commentServices,
 } = require('../../services/api/comment');
 
 const router = express.Router();
 
 router.get(
-  '/:movieId/offset/:offset/limit/:limit',
-  commetServices.getCommentListByMovieId,
+  '/movie/:movieId/offset/:offset/limit/:limit',
+  commentMiddleware.checkMovieExisted,
+  commentServices.getCommentListByMovieId,
   handleResponse,
 );
 
@@ -23,7 +24,8 @@ router.post(
   ensureAuthenticated,
   createCommentSchemaValidator,
   joiErrorHandle,
-  commetServices.createComment,
+  commentMiddleware.checkMovieExisted,
+  commentServices.createComment,
   movieServices.updateMovieRating,
   handleResponse,
 );
@@ -32,7 +34,7 @@ router.put(
   '/:commentId',
   ensureAuthenticated,
   commentMiddleware.checkCommentUpdateData,
-  commetServices.updateCommentById,
+  commentServices.updateCommentById,
   movieServices.updateMovieRating,
   handleResponse,
 );
@@ -40,7 +42,7 @@ router.put(
 router.delete(
   '/:commentId',
   ensureAuthenticated,
-  commetServices.removeCommentById,
+  commentServices.removeCommentById,
   movieServices.updateMovieRating,
   handleResponse,
 );

@@ -14,12 +14,6 @@ const createMovieSchema = Joi.object({
 
 const createMovieSchemaValidator = validator.body(createMovieSchema);
 
-const deleteMovieSchema = Joi.object({
-  movieId: Joi.number().required(),
-});
-
-const deleteMovieSchemaValidator = validator.body(deleteMovieSchema);
-
 const movieServices = {
   createMovie: async (req, res, next) => {
     const { name, releaseDate } = req.body;
@@ -37,7 +31,7 @@ const movieServices = {
       await auditLogHelper.insertAuditLog({
         userId: req.user.userId,
         movieId: movie.id,
-        detail: `create a movie, detail = ${req.body}`,
+        detail: `create a movie, detail = ${JSON.stringify(req.body)}`,
       });
     } catch (err) {
       console.log(err.message);
@@ -56,15 +50,15 @@ const movieServices = {
     } = req.params;
 
     try {
-      const movie = await models.Movie.findAndCountAll({
+      const movies = await models.Movie.findAll({
         offset: offset ? parseInt(offset, 10) : 0,
         limit: limit ? parseInt(limit, 10) : 0,
         order: [['releaseDate', 'DESC']],
       });
       res.response = {
         data: {
-          count: movie.count,
-          movies: movie.rows,
+          count: movies.length,
+          movies,
         },
       };
     } catch (err) {
@@ -148,8 +142,7 @@ const movieServices = {
       isUpdated = false,
     } = req.ratingData;
 
-    const transaction = await sequelizePool.transaction();
-
+    const transaction = await sequelizePool.mariadb.transaction();
     try {
       const movie = await models.Movie.findByPk(movieId, { transaction });
       let {
@@ -182,9 +175,10 @@ const movieServices = {
         },
       );
 
-      await transaction.commmit();
+      await transaction.commit();
     } catch (err) {
       console.log(err.message);
+      await transaction.rollback();
     }
     return next();
   },
@@ -192,6 +186,5 @@ const movieServices = {
 
 module.exports = {
   createMovieSchemaValidator,
-  deleteMovieSchemaValidator,
   movieServices,
 };

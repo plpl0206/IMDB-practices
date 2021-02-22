@@ -83,7 +83,7 @@ module.exports = (sequelize) => {
       },
       createdAt: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('NOW()'),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
         comment: 'db record create time',
       },
