@@ -2,9 +2,9 @@ const Joi = require('joi');
 const validator = require('express-joi-validation').createValidator({
   passError: true,
 });
-const { any } = require('joi');
 const { sequelizePool } = require('../../connections/mysql');
 const models = require('../../models');
+const auditLogHelper = require('../../helpers/common/auditLog');
 
 const createCommentSchema = Joi.object({
   movieId: Joi.number().required(),
@@ -40,6 +40,12 @@ const commetServices = {
       res.response = {
         data: comment,
       };
+
+      await auditLogHelper.insertAuditLog({
+        userId,
+        movieId,
+        detail: `create a comment of a movie, detail = ${req.body}`,
+      });
     } catch (err) {
       console.log(err.message);
       res.response = {

@@ -1,15 +1,15 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
 
-class Comment extends Model {}
+class AuditLog extends Model {}
 
 module.exports = (sequelize) => {
-  Comment.init(
+  AuditLog.init(
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
         autoIncrement: true,
-        comment: 'Comment id',
+        comment: 'audit log id',
       },
       userId: {
         type: Sequelize.UUID,
@@ -19,23 +19,17 @@ module.exports = (sequelize) => {
       },
       movieId: {
         type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
-        defaultValue: 0,
         comment: 'movie id',
       },
-      description: {
+      detail: {
         type: DataTypes.TEXT,
-        comment: 'movie comment description',
+        comment: 'audit log detail',
       },
-      rating: {
-        type: DataTypes.INTEGER,
+      operationTime: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
-        defaultValue: 0,
-        validate: {
-          min: 0,
-          max: 4,
-        },
-        comment: 'movie rating',
+        comment: 'user operation time',
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -49,14 +43,10 @@ module.exports = (sequelize) => {
       freezeTableName: true,
       underscored: true,
       timestamps: false,
-      modelName: 'comment',
+      modelName: 'auditLog',
       charset: 'utf8mb4',
-      indexes: [
-        { fields: ['user_id'], name: 'idx_userId' },
-        { fields: ['movie_id'], name: 'idx_movie_id' },
-      ],
-      comment: 'movies comment',
+      comment: 'IMDB auditLog',
     },
   );
-  return Comment;
+  return AuditLog;
 };

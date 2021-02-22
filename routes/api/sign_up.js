@@ -4,8 +4,8 @@ const {
 } = require('../../services/api/sign_in');
 const {
   createUserSchemaValidator,
-  createUser,
-} = require('../../services/api/sign_up');
+  userServices,
+} = require('../../services/api/user');
 
 const { handleResponse } = require('../../services/common/response');
 const joiErrorHandle = require('../../middlewares/joi_error_handle');
@@ -16,7 +16,7 @@ router.post(
   '',
   createUserSchemaValidator,
   joiErrorHandle,
-  createUser,
+  userServices.createUser,
   genAuthorizaion,
   handleResponse,
 );

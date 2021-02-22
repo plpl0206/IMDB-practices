@@ -4,6 +4,7 @@ const validator = require('express-joi-validation').createValidator({
 });
 const { sequelizePool } = require('../../connections/mysql');
 const models = require('../../models');
+const auditLogHelper = require('../../helpers/common/auditLog');
 
 const createMovieSchema = Joi.object({
   name: Joi.string().required(),
@@ -31,6 +32,12 @@ const movieServices = {
       res.response = {
         data: movie,
       };
+
+      await auditLogHelper.insertAuditLog({
+        userId: req.user.userId,
+        movieId: movie.id,
+        detail: `create a movie, detail = ${req.body}`,
+      });
     } catch (err) {
       console.log(err.message);
       res.response = {
