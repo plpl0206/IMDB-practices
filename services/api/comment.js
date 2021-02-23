@@ -6,6 +6,7 @@ const { sequelizePool } = require('../../connections/mysql');
 const models = require('../../models');
 const auditLogHelper = require('../../helpers/common/auditLog');
 const responseHelper = require('../../helpers/common/response');
+const { websocketHelper, EVENT } = require('../../helpers/websocket');
 
 const createCommentSchema = Joi.object({
   movieId: Joi.number().required(),
@@ -48,6 +49,12 @@ const commentServices = {
         movieId,
         detail: `create a comment of a movie, detail = ${JSON.stringify(req.body)}`,
       });
+
+      websocketHelper.ioBroadcast(EVENT.NEW_COMMENT, {
+        userId: req.user.userId,
+        movieId,
+        comment,
+      });
     } catch (err) {
       console.log(err.message);
       res.response = {
@@ -89,6 +96,12 @@ const commentServices = {
       res.response = {
         data: comment,
       };
+
+      websocketHelper.ioBroadcast(EVENT.UPDATE_COMMENT, {
+        userId: req.user.userId,
+        movieId,
+        comment,
+      });
     } catch (err) {
       console.log(err.message);
       await transaction.rollback();

@@ -4,6 +4,8 @@ const validator = require('express-joi-validation').createValidator({
 });
 const { sequelizePool } = require('../../connections/mysql');
 const models = require('../../models');
+const movieHelper = require('../../helpers/movie');
+const { websocketHelper, EVENT } = require('../../helpers/websocket');
 const auditLogHelper = require('../../helpers/common/auditLog');
 const responseHelper = require('../../helpers/common/response');
 
@@ -33,6 +35,11 @@ const movieServices = {
         movieId: movie.id,
         detail: `create a movie, detail = ${JSON.stringify(req.body)}`,
       });
+
+      websocketHelper.ioBroadcast(EVENT.NEW_MOVIE, {
+        userId: req.user.userId,
+        movie,
+      });
     } catch (err) {
       console.log(err.message);
       res.response = {
@@ -44,17 +51,16 @@ const movieServices = {
   },
 
   getMovieList: async (req, res, next) => {
-    const {
+    let {
       offset,
       limit,
     } = req.params;
 
     try {
-      const movies = await models.Movie.findAll({
-        offset: offset ? parseInt(offset, 10) : 0,
-        limit: limit ? parseInt(limit, 10) : 0,
-        order: [['releaseDate', 'DESC']],
-      });
+      offset = offset ? parseInt(offset, 10) : 0;
+      limit = limit ? parseInt(limit, 10) : 0;
+      const movies = await movieHelper.getMovieList(offset, limit);
+
       res.response = {
         data: {
           count: movies.length,
@@ -98,6 +104,12 @@ const movieServices = {
       });
 
       const movie = await models.Movie.findByPk(movieId);
+
+      websocketHelper.ioBroadcast(EVENT.UPDATE_MOVIE, {
+        userId: req.user.userId,
+        movie,
+      });
+
       res.response = {
         data: movie,
       };

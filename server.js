@@ -22,11 +22,13 @@ const routes = require('./routes');
 routes.setup(app);
 
 const { setupRedis } = require('./connections/redis');
+const { setupWebsocket } = require('./connections/websocket');
 
-const server = app.listen(config.PORT, async () => {
-  console.log(`Server listen on port:${config.PORT}`);
+const server = app.listen(config.server.port, async () => {
+  console.log(`Server listen on port:${config.server.port}`);
   try {
     await setupRedis(config.redis);
+    await setupWebsocket(config.websocket);
   } catch (err) {
     console.log(err.message);
   }

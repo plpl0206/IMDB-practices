@@ -1,4 +1,7 @@
 {
+    "server":{
+        "port": 3000
+    },
     "mysql": {
         "username": "molteo",
         "password": "molteo",
@@ -16,5 +19,8 @@
             "user_token_expire_sec": 86400,
             "jwt_secret": "easdashuhuDFGFDG"
         }
+    },
+    "websocket": {
+        "port": 3004
     }
 }
