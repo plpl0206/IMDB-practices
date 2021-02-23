@@ -1,14 +1,18 @@
 const ENV_DEVELOPMENT = 'development';
-const CONFIG_ENV = process.env.CONFIG_ENV || ENV_DEVELOPMENT;
+const NODE_ENV = process.env.NODE_ENV || ENV_DEVELOPMENT;
+
+console.log(`NODE_ENV = ${NODE_ENV}`);
 
 let config = {
-  configEnv: CONFIG_ENV,
+  configEnv: NODE_ENV,
 };
 
-if (CONFIG_ENV === ENV_DEVELOPMENT) {
+if (NODE_ENV === ENV_DEVELOPMENT) {
   config = require('./config.json');
 } else {
-  config = require(`./config_${CONFIG_ENV}.json`);
+  config = require(`./config_${NODE_ENV}.json`);
 }
+
+console.log(config);
 
 module.exports = config;
