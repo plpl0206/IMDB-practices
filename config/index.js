@@ -1,7 +1,9 @@
 const ENV_DEVELOPMENT = 'development';
 const CONFIG_ENV = process.env.CONFIG_ENV || ENV_DEVELOPMENT;
 
-let config = {};
+let config = {
+  configEnv: CONFIG_ENV,
+};
 
 if (CONFIG_ENV === ENV_DEVELOPMENT) {
   config = require('./config.json');

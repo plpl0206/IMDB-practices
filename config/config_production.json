@@ -1,0 +1,26 @@
+{
+    "server":{
+        "port": 3000
+    },
+    "mysql": {
+        "username": "molteo",
+        "password": "molteo",
+        "database": "IMDB",
+        "host": "35.189.174.90",
+        "dialect": "mariadb"
+    },
+    "redis": {
+        "host":"ec2-54-235-218-192.compute-1.amazonaws.com" ,
+        "port":"16809",
+        "password":"pf6c96616371a28894c77f42614b2e7148320ee6b217da307c98fa64053a8a0eb"
+    },
+    "auth": {
+        "parameter":{
+            "user_token_expire_sec": 86400,
+            "jwt_secret": "easdashuhuDFGFDG"
+        }
+    },
+    "websocket": {
+        "port": 3004
+    }
+}

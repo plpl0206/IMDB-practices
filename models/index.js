@@ -1,3 +1,4 @@
+const config = require('../config');
 const { sequelizePool } = require('../connections/mysql');
 
 const models = {
@@ -7,6 +8,8 @@ const models = {
   AuditLog: require('./auditLog')(sequelizePool.mariadb),
 };
 
-sequelizePool.mariadb.sync();
+sequelizePool.mariadb.sync({
+  alter: config.configEnv !== 'production',
+});
 
 module.exports = models;
