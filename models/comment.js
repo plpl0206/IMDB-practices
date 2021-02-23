@@ -37,18 +37,12 @@ module.exports = (sequelize) => {
         },
         comment: 'movie rating',
       },
-      createdAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false,
-        comment: 'db record create time',
-      },
     },
     {
       sequelize,
       freezeTableName: true,
       underscored: true,
-      timestamps: false,
+      timestamps: true,
       modelName: 'comment',
       charset: 'utf8mb4',
       indexes: [
