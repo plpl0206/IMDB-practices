@@ -24,6 +24,10 @@ routes.setup(app);
 const { setupRedis } = require('./connections/redis');
 const { setupWebsocket } = require('./connections/websocket');
 
+app.use('/', (req, res, next) => {
+  res.send('imdb api v1');
+});
+
 const server = app.listen(config.server.port, async () => {
   console.log(`Server listen on port:${config.server.port}`);
   try {
