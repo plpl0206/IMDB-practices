@@ -7,5 +7,6 @@ RUN npm install
 COPY . /IMDB
 
 EXPOSE 3004
+EXPOSE 3000
 
 CMD [ "npm", "start" ]
