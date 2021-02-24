@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm run lint:fix && npm run lint && node server.js",
+    "start": "node server.js",
+    "dev": "npm run lint:fix && npm run lint && node server.js",
     "lint": "$(npm bin)/eslint .",
     "lint:fix": "npm run lint -- --fix"
   },
