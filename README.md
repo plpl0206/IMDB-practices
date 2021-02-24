@@ -18,7 +18,7 @@ Implement IMDB api services.
     4. remove movie.
 
 - Comment 
-    1. create a new comment about one movie.
+    1. create a new comment about one movie.
     2. get comment list about one movie.
     3. update comment.
     4. remove comment.
@@ -46,90 +46,90 @@ Implement IMDB api services.
 ## Database Schemas
 
 - user
-    userId: 
-        primaryKey: true
-        defaultValue: uuid
-        dataType: string
-    username:
-        NotNull: true
-        defaultValue: ''
-        dataType: string
-    email:
-        NotNull: true
-        unique: true
-        defaultValue: ''
-        dataType: string
-    password:
-        NotNull: true
-        defaultValue: ''
-        dataType: string
+    - userId: 
+        1. primaryKey: true
+        2. defaultValue: uuid
+        3. dataType: string
+    - username:
+        1. NotNull: true
+        2. defaultValue: ''
+        3. dataType: string
+    - email:
+        1. NotNull: true
+        2. unique: true
+        3. defaultValue: ''
+        4. dataType: string
+    - password:
+        1. NotNull: true
+        2. defaultValue: ''
+        3. dataType: string
 
 - movie
-    id:
-        primaryKey: true
-        defaultValue: auto gen number
-        dataType: integer
-    name:
-        NotNull: true
-        defaultValue: ''
-        dataType: string
-    releaseDate:
-        NotNull: true
-        defaultValue: current timestamp
-        dataType: date
-    avgRating:
-        NotNull: false
-        defaultValue: 0.00
-        dataType: float
-    ratingCount:
-        NotNull: false
-        defaultValue: 0
-        dataType: integer
+    - id:
+        1. primaryKey: true
+        2. defaultValue: auto gen number
+        3. dataType: integer
+    - name:
+        1. NotNull: true
+        2. defaultValue: ''
+        3. dataType: string
+    - releaseDate:
+        1. NotNull: true
+        2. defaultValue: current timestamp
+        3. dataType: date
+    - avgRating:
+        1. NotNull: false
+        2. defaultValue: 0.00
+        3. dataType: float
+    - ratingCount:
+        1. NotNull: false
+        2. defaultValue: 0
+        3. dataType: integer
 
 - comment
-    id:
-        primaryKey: true
-        defaultValue: auto gen number
-        dataType: integer
-    userId:
-        NotNull: true
-        value: uuid relation to user
-        dataType: string
-    movieId:
-        NotNull: true
-        value: integer relation to movie
-        dataType: integer
-    rating:
-        NotNull: true
-        defaultValue: 0
-        range: 0 ~ 4
-        dataType: integer
-    description:
-        NotNull: false
-        defaultValue: ''
-        dataType: text
+    - id:
+        1. primaryKey: true
+        2. defaultValue: auto gen number
+        3. dataType: integer
+    - userId:
+        1. NotNull: true
+        2. value: uuid relation to user
+        3. dataType: string
+    - movieId:
+        1. NotNull: true
+        2. value: integer relation to movie
+        3. dataType: integer
+    - rating:
+        1. NotNull: true
+        2. defaultValue: 0
+        3. range: 0 ~ 4
+        4. dataType: integer
+    - description:
+        1. NotNull: false
+        2. defaultValue: ''
+        3. dataType: text
 
 - auditLog
-    id:
-        primaryKey: true
-        defaultValue: auto gen number
-        dataType: integer
-    userId:
-        NotNull: true
-        value: uuid relation to user
-        dataType: string
-    movieId:
-        NotNull: true
-        value: integer relation to movie
-        dataType: integer
-    detail:
-        NotNull: false
-        defaultValue: ''
-        dataType: text
-    operationTime:
-        NotNull: true
-        defaultValue: current timestamp
-        dataType: date
+    - id:
+        1. primaryKey: true
+        2. defaultValue: auto gen number
+        3. dataType: integer
+    - userId:
+        1. NotNull: true
+        2. value: uuid relation to user
+        3. dataType: string
+    - movieId:
+        1. NotNull: true
+        2. value: integer relation to movie
+        3. dataType: integer
+    - detail:
+        1. NotNull: false
+        2. defaultValue: ''
+        3. dataType: text
+    - operationTime:
+        1. NotNull: true
+        2. defaultValue: current timestamp
+        3. dataType: date
 
 ## APIs
 
