@@ -54,7 +54,7 @@ const movieServices = {
     let {
       offset,
       limit,
-    } = req.params;
+    } = req.query;
 
     try {
       offset = offset ? parseInt(offset, 10) : 0;

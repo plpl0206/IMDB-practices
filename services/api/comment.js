@@ -158,7 +158,7 @@ const commentServices = {
       movieId,
       offset,
       limit,
-    } = req.params;
+    } = req.query;
 
     try {
       const comments = await models.Comment.findAll({

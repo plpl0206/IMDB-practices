@@ -13,7 +13,7 @@ const {
 const router = express.Router();
 
 router.get(
-  '/movie/:movieId/offset/:offset/limit/:limit',
+  '/',
   commentMiddleware.checkMovieExisted,
   commentServices.getCommentListByMovieId,
   handleResponse,

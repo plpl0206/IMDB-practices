@@ -11,7 +11,7 @@ const {
 const router = express.Router();
 
 router.get(
-  '/offset/:offset/limit/:limit',
+  '',
   movieServices.getMovieList,
   handleResponse,
 );
