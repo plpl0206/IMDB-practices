@@ -150,9 +150,9 @@ Implement IMDB api services.
     - method: POST
     - Content-type: application/json
     - parameters: 
-        - head:
-            user_id
-            user_token
+        - body:
+            email
+            password
 
 - user
 
@@ -182,13 +182,15 @@ Implement IMDB api services.
 
 - movie
 
-    - path: /api/movie/offset/:offset/limit/:limit
+    - path: /api/movie
     - method: GET
     - Content-type: application/json
     - parameters: 
-        None
+        - query:
+            offset
+            limit
 
-    - path: /api/movie
+    - path: /api/movie/:movieId
     - method: GET
     - Content-type: application/json
     - parameters: 
@@ -225,11 +227,14 @@ Implement IMDB api services.
 
 - comment
 
-    - path: /api/comment/movie/:movieId/offset/:offset/limit/  :limit
+    - path: /api/comment
     - method: GET
     - Content-type: application/json
     - parameters: 
-        None
+        - query:
+            movieId
+            offset
+            limit
 
     - path: /api/comment
     - method: POST
